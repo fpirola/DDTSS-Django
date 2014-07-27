@@ -1,39 +1,33 @@
+{# DDTSS-Django - A Django implementation of the DDTP/DDTSS website.               #}
+{# Copyright (C) 2011-2014 Martijn van Oosterhout <kleptog@svana.org>              #}
+{#                                                                                 #}
+{# This program is free software; you can redistribute it and/or                   #}
+{# modify it under the terms of the GNU General Public License                     #}
+{# as published by the Free Software Foundation; either version 2                  #}
+{# of the License, or (at your option) any later version.                          #}
+{#                                                                                 #}
+{# This program is distributed in the hope that it will be useful,                 #}
+{# but WITHOUT ANY WARRANTY; without even the implied warranty of                  #}
+{# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   #}
+{# GNU General Public License for more details.                                    #}
+{#                                                                                 #}
+{# You should have received a copy of the GNU General Public License               #}
+{# along with this program; if not, write to the Free Software                     #}
+{# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA. #}
+
 {% extends "ddtss/base_ddtss.html" %}
 
 {% block title %}
-DDTSS ({{lang.language}})
+DDTSS ({{ lang.language }})
 {% endblock %}
 
-{% block ddtss_head %}
-<script language="javascript" type="text/javascript" src="{{ STATIC_URL }}ddtss/js/jquery/jquery.flot.js"></script>
-<script type="text/javascript">//<![CDATA[
-function toggleAge() {
-    toggleFields(document.getElementsByName('showage'));
-}
-
-function toggleSize() {
-    toggleFields(document.getElementsByName('showsize'));
-}
-
-function toggleFields(fields) {
-    var i;
-    for(i = fields.length - 1; i >= 0; i -= 1) {
-        if(fields[i].style.display === 'inline') {
-            fields[i].style.display = 'none';
-        } else {
-            fields[i].style.display = 'inline';
-        }
-    }
-}
-
-$(document).ready(function($) {
-    DDTSS.setupMessagelinks();
-})
-//]]></script>
+{% block head_specific_page %}
+<script type="text/javascript" src="{{ STATIC_URL }}ddtss/js/jquery/jquery.flot.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}ddtss/js/index_lang.js"></script>
 {% endblock %}
 
 {% block content %}
-<h1>DDTSS for {{lang.language}} {% if lang.fullname %}({{lang.fullname}}){% endif %}</h1>
+<h1>DDTSS for {{ lang.language }} {% if lang.fullname %}({{ lang.fullname }}){% endif %}</h1>
 
 <!-- Project Messages -->
 {% for message in global_messages %}
@@ -67,7 +61,7 @@ $(document).ready(function($) {
 <span style="font-size:120%">
     <b>You can use all the features only when logged in! Please <a href="login">Login</a></b>
 </span>
-<p><a href="//www.debian.org/international/l10n/ddtp#rules">Common translation rules</a></p>
+<p><a href="//www.debian.org/international/l10n/ddtp#rules" target="_blank">Common translation rules</a></p>
 {% endif %}
 
 
@@ -97,7 +91,7 @@ Coordinators for {{lang.language}}:
     <ul>
 {% endif %}
         <li>
-            <b title="{{message.parent.message}}">{{message.message}}</b><br>
+            <b title="{{ message.parent.message }}">{{ message.message }}</b><br>
             <span style="font-size:80%">
                 from {{message.from_user}}
                 at {{message.datetime|date:"Y-m-d H:i:s"}}
@@ -122,14 +116,14 @@ Coordinators for {{lang.language}}:
 <tbody>
 {% for milestoneinfo in milestones %}
 <tr class="{% cycle 'odd' 'even' %}">
-    <td><img src="{{ STATIC_URL }}ddtss/img/{{milestoneinfo.type}}.png" height="15">{{milestoneinfo.typename}}</td>
-    <td><a href="{% url 'ddt_stats_one_milestones_lang' lang.language milestoneinfo.name %}">{{milestoneinfo.name}}</a></td>
-    <td align='right'>{{milestoneinfo.translated}}</td>
-<!--    <td align='right'>{{milestoneinfo.pending}}</td> -->
-    <td align='right'> {{milestoneinfo.total}}</td>
+    <td><img src="{{ STATIC_URL }}ddtss/img/{{ milestoneinfo.type }}.png" height="15">{{ milestoneinfo.typename }}</td>
+    <td><a href="{% url 'ddt_stats_one_milestones_lang' lang.language milestoneinfo.name %}">{{ milestoneinfo.name }}</a></td>
+    <td align='right'>{{ milestoneinfo.translated }}</td>
+<!--    <td align='right'>{{ milestoneinfo.pending }}</td> -->
+    <td align='right'> {{ milestoneinfo.total }}</td>
     <td> <div class="progress_bar">
-            <strong>{{milestoneinfo.percent|floatformat}}%</strong>
-            <span style="width: {{milestoneinfo.percent}}%;">&nbsp;</span>
+            <strong>{{ milestoneinfo.percent|floatformat }}%</strong>
+            <span style="width: {{ milestoneinfo.percent }}%;">&nbsp;</span>
         </div>
     </td>
     <td><div onclick="DDTSS.setMilestoneChart('{{milestoneinfo.typename}} milestone', '{% url 'ddtss_flot_milestone_data' lang.language milestoneinfo.name %}')">Chart</div></td>
@@ -231,8 +225,8 @@ Coordinators for {{lang.language}}:
 <div class=infobox>
 <h2>Infos about : <div class="help" title="About your account, some stats,....">?</div>
 </h2><ul>
-<li><button onclick="toggleSize(); return false;" class="button_as_link">Toggle display size</button></li>
-<li><button onclick="toggleAge(); return false;" class="button_as_link">Toggle display ages</button></li>
+<li><button onclick="INDEX_LANG.toggleSize(); return false;" class="button_as_link">Toggle display size</button></li>
+<li><button onclick="INDEX_LANG.toggleAge(); return false;" class="button_as_link">Toggle display ages</button></li>
 {% if user.logged_in %}
 <li>Translations: {{user.counttranslations}}</li>
 <li>Reviews: {{user.countreviews}}</li>
@@ -304,9 +298,9 @@ Coordinators for {{lang.language}}:
 </table>
 <a href="{% url 'ddtss_index_lang' lang.language %}">Refresh</a> |
 <a href="{% url 'ddtss_index_lang' 'xx' %}">Another language</a> |
-<a href="/ddtss/index.cgi/nl/wordlist">Wordlist</a> |
-<a href="//www.debian.org/international/l10n/ddtp">DDTP documentation</a> |
-<a href="//www.debian.org/international/l10n/ddtp#rules">Common translation rules</a> |
+<a href="{% url 'ddtss_wordlist_page' lang.language %}">Wordlist</a> |
+<a href="//www.debian.org/international/l10n/ddtp" target="_blank">DDTP documentation</a> |
+<a href="//www.debian.org/international/l10n/ddtp#rules" target="_blank">Common translation rules</a> |
 {% if user.logged_in %}
 <a href="{% url 'ddtss_logout' %}">Logout</a>
 {% else %}

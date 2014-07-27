@@ -1,64 +1,28 @@
+{# DDTSS-Django - A Django implementation of the DDTP/DDTSS website.               #}
+{# Copyright (C) 2011-2014 Martijn van Oosterhout <kleptog@svana.org>              #}
+{#                                                                                 #}
+{# This program is free software; you can redistribute it and/or                   #}
+{# modify it under the terms of the GNU General Public License                     #}
+{# as published by the Free Software Foundation; either version 2                  #}
+{# of the License, or (at your option) any later version.                          #}
+{#                                                                                 #}
+{# This program is distributed in the hope that it will be useful,                 #}
+{# but WITHOUT ANY WARRANTY; without even the implied warranty of                  #}
+{# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                   #}
+{# GNU General Public License for more details.                                    #}
+{#                                                                                 #}
+{# You should have received a copy of the GNU General Public License               #}
+{# along with this program; if not, write to the Free Software                     #}
+{# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA. #}
+
 {% extends "ddtss/base_ddtss.html" %}
 
 {% block title %}
-DDTSS ({{lang.language}}): Translating {{descr.package}}
+DDTSS ({{ lang.language }}): Translating {{ descr.package }}
 {% endblock %}
 
-{% block ddtss_head %}
-<script type="text/javascript">//<![CDATA[
-function showshortdiff (url) {
-    var boxes = document.getElementsByName('shortboxes');
-    for(i = boxes.length; i >= 0; i -= 1) {
-        boxes[i].style.display = 'none';
-    }
-    /* Coded like this to avoid errors on 'None' */
-    box = document.getElementById(url)
-    if(box) {
-        box.style.display='block';
-    }
-}
-
-function showlongdiff (url) {
-    var boxes = document.getElementsByName("longboxes");
-    for(i=0, l=boxes.length; i<l; i++) {
-        boxes[i].style.display = "none";
-    }
- box = document.getElementById(url)
- if(box) box.style.display='block'
- return false;
-}
-
-function toggle_ShowShortDescr() {
-    var ShowDescr_fields = document.getElementsByName("ShowShortDescr");
-    for(i=0, l=ShowDescr_fields.length; i<l; i++) {
-        if(ShowDescr_fields[i].style.display == "block") {
-            ShowDescr_fields[i].style.display = "none";
-        }
-        else {
-            ShowDescr_fields[i].style.display = "block";
-        }
-    }
-    return false;
-}
-
-function toggle_ShowLongDescr() {
-    var ShowDescr_fields = document.getElementsByName("ShowLongDescr");
-    for(i=0, l=ShowDescr_fields.length; i<l; i++) {
-        if(ShowDescr_fields[i].style.display == "block") {
-            ShowDescr_fields[i].style.display = "none";
-        }
-        else {
-            ShowDescr_fields[i].style.display = "block";
-        }
-    }
-    return false;
-}
-
-$(document).ready(function($) {
-    $("#submit").prop('disabled',true);
-    DDTSS.setupMessagelinks();
-})
-//]]></script>
+{% block head_specific_page %}
+<script type="text/javascript" src="{{ STATIC_URL }}ddtss/js/translate.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -88,14 +52,14 @@ go</font>
 <form method="post" action="{% url 'ddtss_translate' lang.language descr.description_id %}" enctype="multipart/form-data" accept-charset="utf-8">
 {% endif %}
 <h5>Short description</h5>
-<button onclick="return showshortdiff('None')" class="button_as_link">None</button> |
+<button onclick="return TRANSLATE.showShortDiff('None')" class="button_as_link">None</button> |
 {% if diff_short %}
-<button onclick="return showshortdiff('show-short-change-diff')" class="button_as_link">Show Diff Changes</button> |
+<button onclick="return TRANSLATE.showShortDiff('show-short-change-diff')" class="button_as_link">Show Diff Changes</button> |
 {% endif %}
 {% for olddiff in olddiffs %}
-<button onclick="return showshortdiff('show-short-diff-{{olddiff.oldid}}')" class="button_as_link">Show diff to {{olddiff.oldid}}</button> |
+<button onclick="return TRANSLATE.showShortDiff('show-short-diff-{{olddiff.oldid}}')" class="button_as_link">Show diff to {{olddiff.oldid}}</button> |
 {% if forloop.last %}
-<button onclick="return toggle_ShowShortDescr();" class="button_as_link">(toggle full show)</button>
+<button onclick="return TRANSLATE.toggleShowShortDescr();" class="button_as_link">(toggle full show)</button>
 {% endif %}
 {% endfor %}
 <p>
@@ -128,14 +92,14 @@ Translated:
   <li>Translated ({{lang.language}}):  <input type="text" name="short" value="{{trans.display_short}}" size="75" onchange="document.forms[0].submit.disabled=0" spellcheck="true" /></div></li>
 </ul>
 <h5>Long description</h5>
-<button onclick="return showlongdiff('None')" class="button_as_link">None</button> |
+<button onclick="return TRANSLATE.showLongDiff('None')" class="button_as_link">None</button> |
 {% if diff_long %}
-<button onclick="return showlongdiff('show-long-change-diff')" class="button_as_link">Show Diff Changes</button> |
+<button onclick="return TRANSLATE.showLongDiff('show-long-change-diff')" class="button_as_link">Show Diff Changes</button> |
 {% endif %}
 {% for olddiff in olddiffs %}
-<button onclick="return showlongdiff('show-long-diff-{{olddiff.oldid}}')" class="button_as_link">Show Diff to {{olddiff.oldid}}</button> |
+<button onclick="return TRANSLATE.showLongDiff('show-long-diff-{{ olddiff.oldid }}')" class="button_as_link">Show Diff to {{olddiff.oldid}}</button> |
 {% if forloop.last %}
-<button onclick="return toggle_ShowLongDescr();" class="button_as_link">(toggle full show)</button>
+<button onclick="return TRANSLATE.toggleShowLongDescr();" class="button_as_link">(toggle full show)</button>
 {% endif %}
 {% endfor %}
 <p>
