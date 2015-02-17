@@ -65,7 +65,7 @@ except IOError:
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django_openid_consumer.middleware.OpenIDMiddleware',
+    #'django_openid_consumer.middleware.OpenIDMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -80,8 +80,8 @@ INSTALLED_APPS = (
     'ddtp.ddtss',
     'ddtp.database',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_openid_consumer',
+    'django.contrib.staticfiles'
+    #,'django_openid_consumer',
 )
 
 TEMPLATE_LOADERS = (

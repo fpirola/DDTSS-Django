@@ -39,7 +39,7 @@ from urlparse import urlsplit
 import django.http
 django.http.get_host = lambda req: req.get_host()
 
-import django_openid_consumer.views
+#import django_openid_consumer.views
 
 # Import the logging library.
 import logging
@@ -265,7 +265,7 @@ def view_login(session, request):
             user = session.query(Users).get(form.cleaned_data['username'])
 
             # Kill any previous logins
-            django_openid_consumer.views.signout(request)
+            #django_openid_consumer.views.signout(request)
             request.session.pop('username', None)
 
             if user and not user.active:
@@ -368,7 +368,7 @@ def view_logout(session, request):
         logger.info("Logout successful" \
                     " - username[%s]", user.username)
         messages.success(request, "Logout successful.")
-        django_openid_consumer.views.signout(request)
+        #django_openid_consumer.views.signout(request)
         del request.session['username']
 
     # User not logged in or logged out successful
